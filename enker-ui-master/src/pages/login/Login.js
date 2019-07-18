@@ -1,34 +1,32 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Button, Image } from 'react-bootstrap';
-import { Redirect } from 'react-router-dom';
+//  import { Redirect } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 
-/**
- * Component for Login Page
- */
 export default class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
       email: null,
-      pass: null,
+      password: null,
     };
-    this.changing = this.changing.bind(this);
+
+    this.emailChanging = this.emailChanging.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.passChanging = this.passChanging.bind(this);
+    this.passwordChanging = this.passwordChanging.bind(this);
   }
 
   handleSubmit(event) {
     event.preventDefault()
-    alert(`Login is ${this.state.email}, password is ${this.state.pass}`)
-    
+    alert(this.state.password)
+
   }
-  changing(event) {
+  emailChanging(event) {
     this.setState({ email: event.target.value });
   }
-  passChanging(event){
-    this.setState({ pass: event.target.value });
+  passwordChanging(event) {
+    this.setState({ password: event.target.value });
   }
   render() {
     // TODO: use to redirect if user not logged in
@@ -46,7 +44,7 @@ export default class Login extends Component {
           <Image src="http://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,f_auto,h_1440,q_80,w_720/280396/tumologoanahit_vqlyla.png" className="loginPageLogo" />
           <Form.Group controlId="formBasicEmail">
             <Form.Label>Email address</Form.Label>
-            <Form.Control type="email" placeholder="Enter email" value={this.state.email} onChange={this.changing} />
+            <Form.Control type="email" placeholder="Enter email" value={this.state.email} onChange={this.emailChanging} />
             <Form.Text className="text-muted">
               We'll never share your email with anyone else.
               </Form.Text>
@@ -54,7 +52,7 @@ export default class Login extends Component {
 
           <Form.Group controlId="formBasicPassword">
             <Form.Label>Password</Form.Label>
-            <Form.Control type="password" placeholder="Password" value={this.state.pass} onChange={this.passChanging}/>
+            <Form.Control type="password" placeholder="Password" value={this.state.password} onChange={this.passwordChanging} />
           </Form.Group>
           <Form.Group controlId="formBasicChecbox">
             <Form.Check type="checkbox" label="Check me out" />
@@ -63,7 +61,7 @@ export default class Login extends Component {
             Submit
             </Button>
         </Form>
-        
+
       </Container>
     )
   }
