@@ -27,11 +27,6 @@ app.use('/', studentsRouter);
 
 db.connect();
 
-/**
- * ********************
- * TUMO CHANGES BELOW *
- * ********************
- */
 passport.use(new BasicStrategy(
   function(username, password, done) {
     db.getClient().collection("students").findOne({email: username},

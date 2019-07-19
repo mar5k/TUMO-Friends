@@ -41,7 +41,7 @@ export default class Login extends Component {
       <Container className="mt-3 loginContainer">
 
         <Form>
-          <Image src="http://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,f_auto,h_1440,q_80,w_720/280396/tumologoanahit_vqlyla.png" className="loginPageLogo" />
+          <img src="http://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,f_auto,h_1440,q_80,w_720/280396/tumologoanahit_vqlyla.png" className="loginPageLogo" />
           <Form.Group controlId="formBasicEmail">
             <Form.Label>Email address</Form.Label>
             <Form.Control type="email" placeholder="Enter email" value={this.state.email} onChange={this.emailChanging} />
@@ -53,7 +53,7 @@ export default class Login extends Component {
           <Form.Group controlId="formBasicPassword">
             <Form.Label>Password</Form.Label>
             <Form.Control type="password" placeholder="Password" value={this.state.password} onChange={this.passwordChanging} />
-          </Form.Group>
+          </Form.Group> 
           <Form.Group controlId="formBasicChecbox">
             <Form.Check type="checkbox" label="Check me out" />
           </Form.Group>
