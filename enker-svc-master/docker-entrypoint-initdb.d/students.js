@@ -6,7 +6,7 @@ db.students.insertMany([{
   "password": "password",
   "learningTargets": [
     "Animation",
-    "Game Developdb.stutends.getIndexment",
+    "Game Development",
     "Filmmaking"
   ],
   "location": "Yerevan"
