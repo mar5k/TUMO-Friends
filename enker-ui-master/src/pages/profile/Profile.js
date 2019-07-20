@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Redirect} from 'react-router-dom';
+// import {Redirect} from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 
 /**

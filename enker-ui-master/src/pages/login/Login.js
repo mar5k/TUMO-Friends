@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Button, Image } from 'react-bootstrap';
-//  import { Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 
 export default class Login extends Component {
@@ -20,6 +20,7 @@ export default class Login extends Component {
   handleSubmit(event) {
     event.preventDefault()
     alert(this.state.password)
+    this.props.loginUser(this.state)
 
   }
   emailChanging(event) {
@@ -30,18 +31,18 @@ export default class Login extends Component {
   }
   render() {
     // TODO: use to redirect if user not logged in
-    // if (this.props.user) {
-    //   return (
-    //     <Redirect to={{
-    //       pathname: '/profile',
-    //     }} />
-    //   )
-    // }
+    if (this.props.user) {
+      return (
+        <Redirect to={{
+          pathname: '/profile',
+        }} />
+      )
+    }
     return (
       <Container className="mt-3 loginContainer">
 
         <Form>
-          <img src="http://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,f_auto,h_1440,q_80,w_720/280396/tumologoanahit_vqlyla.png" className="loginPageLogo" />
+          <Image src="http://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,f_auto,h_1440,q_80,w_720/280396/tumologoanahit_vqlyla.png" className="loginPageLogo" />
           <Form.Group controlId="formBasicEmail">
             <Form.Label>Email address</Form.Label>
             <Form.Control type="email" placeholder="Enter email" value={this.state.email} onChange={this.emailChanging} />
