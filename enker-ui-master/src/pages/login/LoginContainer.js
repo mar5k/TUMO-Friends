@@ -3,7 +3,8 @@ import Login from './Login';
 import { loginUser } from './../../redux/actions';
 
 const mapStateToProps = state => ({
-  user: state.user.data
+  user: state.user.data,
+  userError: state.user.error
 })
 
 const mapDispatchToProps = dispatch => {
