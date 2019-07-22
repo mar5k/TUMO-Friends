@@ -1,4 +1,4 @@
-// TODO: use --> import Socket from '../socket';
+ import Socket from '../socket';
 
 const apiHost = process.env.REACT_APP_API_HOST || 'http://localhost:3001';
 const axios = require('axios');
@@ -43,10 +43,18 @@ export const loginUser = (email,password) => {
         console.log(response);
         sessionStorage.setItem('email', email);
         sessionStorage.setItem('password', password);
-        return dispatch({
+        Socket.connect(user =>{
+          user.emit('login', {
+            email,
+            password
+          })
+          
+          return dispatch({
           type: "LOGIN_USER",
           payload: response.data
         });
+        })
+        
       })
       .catch(err =>{
         console.log(err);
@@ -75,6 +83,15 @@ export const logoutUser = (user) => {
    * 1. Emit logout action via socket
    * 2. Clear Session Storage
    */
+  return dispatch => {
+    let { email, password } = user;
+    Socket.connect(user => {
+      user.emit('logout', { email, password });
+      sessionStorage.removeItem('email');
+      sessionStorage.removeItem('password');
+      return dispatch({ type: 'LOGOUT_USER', payload: null });
+    });
+  }
 }
 
 export const startChat = (withUser) => {
