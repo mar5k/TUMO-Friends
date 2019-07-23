@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import {Redirect} from 'react-router-dom';
 import { Container, Form } from 'react-bootstrap';
 
-/**
- * React component for Profile page
- */
+
 class Profile extends Component {
   constructor(props) {
     super(props);

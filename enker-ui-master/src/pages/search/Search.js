@@ -1,20 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// TODO: use --> import Socket from '../../socket';
-import {Container} from 'react-bootstrap';
+import Socket from '../../socket';
+import { Container, ListGroup, Form, InputGroup, Button, Row, Col, Badge } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
+import './search.css'
 
-/**
- * React component to render search page
- */
+
 class Search extends React.Component {
-  // constructor() {
-    // TODO: set default state of list of users, and text search, event handler and socket connect 
-  // }
+  constructor(props) {
+    //TODO: set default state of list of users, and text search, event handler and socket connect 
+    super(props)
+    this.state = {
+      textSearch: '',
+      studentsList: []
+    };
+    this.query = this.query.bind(this);
+  }
   componentDidMount() {
-    // TODO: event handlers if user logged in or out, run query
+    this.query();
   }
   handleSubmit(event) {
-    // TODO: form submit
+    event.preventDefault();
+    this.query(this.state.textSearch);
   }
   onStudentLoggedIn() {
     // TODO: Socket event handler if user logged in - run query
@@ -26,12 +33,40 @@ class Search extends React.Component {
     // TODO: event to invoke start-chat action via Socket, redirect to /network page
   }
   query(textSearch) {
-    // TODO: emit query via Socket based on text
+    Socket.connect(users => {
+      users.emit('search', textSearch, result => {
+        this.setState({ studentsList: result });
+      });
+    });
   }
   render() {
     return (
       <Container className="mt-5">
-        <div>TODO: adding page to search for users based on single text field</div>
+        <Row>
+          <Col lg={8} md={10} sm={12}>
+            <Form onSubmit={e => this.handleSubmit(e)}>
+              <Form.Group>
+                <InputGroup size="lg" className="mb-3">
+                  <Form.Control placeholder='Search' onChange={e => this.setState({ textSearch: e.target.value })} value={this.state.textSearch} aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
+                  <InputGroup.Append>
+                    <Button variant='primary' id="r5"> Search </Button>
+                  </InputGroup.Append>
+                </InputGroup>
+              </Form.Group>
+            </Form>
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={6} sm={12}>
+            <ListGroup>
+              {this.state.studentsList.length > 0 ? this.state.studentsList.map(e => <ListGroup.Item key={e.id}>{e.firstName} {e.lastName} {e.loggedIn && <Badge variant="primary">Online</Badge>}</ListGroup.Item>) : ''}
+            </ListGroup>
+          </Col>
+          <Col lg={6} sm={12}>
+            <p>To start chat please click start chat</p>
+            <LinkContainer to='/network'><Button variant='primary'>Start Chat</Button></LinkContainer>
+          </Col>
+        </Row>
       </Container>
     )
   }

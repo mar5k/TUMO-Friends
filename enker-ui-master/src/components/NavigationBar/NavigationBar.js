@@ -6,7 +6,7 @@ import tumoLogoArm from './tumo-logo-arm.png';
 import ProfileIcon from './ProfileIcon';
 import NetworkIcon from './NetworkIcon';
 import SearchIcon from './SearchIcon';
-
+import './../../../src/pages/search/search.css'
 import './navigationbar.css';
 
 
@@ -45,9 +45,10 @@ export default ({user, location, logoutUser}) => (
        user.data ? (
         <span>
           <span className="ml-auto">
-            {/* <LinkContainer to="/profile"> */}
-              <span className='text-white'>Hello {user.data.firstName}</span> <Button variant='danger' onClick={() => logoutUser(sessionStorage.getItem('email'), sessionStorage.getItem('email'))}>Log Out</Button>
-            {/* </LinkContainer> */}
+            <span className='text-white'>Hello {user.data.firstName}!</span>
+            <LinkContainer to="/">
+              <Button id = "r5" onClick={() => logoutUser(sessionStorage.getItem('email'), sessionStorage.getItem('email'))}>Log Out</Button>
+            </LinkContainer>
           </span>
         </span>
       ) : null

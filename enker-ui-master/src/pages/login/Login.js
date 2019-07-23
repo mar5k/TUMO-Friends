@@ -30,7 +30,6 @@ export default class Login extends Component {
     this.setState({ password: event.target.value });
   }
   render() {
-    // TODO: use to redirect if user not logged in
     if (this.props.user) {
       return (
         <Redirect to={{
