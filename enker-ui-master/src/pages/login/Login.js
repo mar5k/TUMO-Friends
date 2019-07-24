@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Button, Image } from 'react-bootstrap';
-import { Redirect } from 'react-router-dom';
-import { Container } from 'react-bootstrap';
+import { Form, Button, Image} from 'react-bootstrap';
+import { Redirect, Link } from 'react-router-dom';
+import { Container} from 'react-bootstrap';
+//import { LinkContainer } from 'react-router-bootstrap'
 
 export default class Login extends Component {
   constructor(props) {
@@ -57,9 +58,8 @@ export default class Login extends Component {
           <Form.Group controlId="formBasicChecbox">
             <Form.Check type="checkbox" label="Check me out" />
           </Form.Group>
-          <Button variant="primary" type="submit" className="btn btn-success" onClick={this.handleSubmit}>
-            Submit
-            </Button>
+          <Button variant="primary" type="submit" className="btn btn-success" onClick={this.handleSubmit}> Submit</Button>
+          <Link to = "/signup"> <Button variant = "primary">Sign Up!</Button></Link>
         </Form>
 
       </Container>

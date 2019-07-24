@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Socket from '../../socket';
-import { Container, ListGroup, Form, InputGroup, Button, Row, Col, Badge } from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
+import { Container, ListGroup, Form, InputGroup, Button, Row, Col, Badge, Tab } from 'react-bootstrap';
+//import { LinkContainer } from 'react-router-bootstrap';
 import './search.css'
 
 
@@ -24,17 +24,29 @@ class Search extends React.Component {
     this.query(this.state.textSearch);
   }
   onStudentLoggedIn() {
-    // TODO: Socket event handler if user logged in - run query
+    Socket.users.on('user_login', user => {
+      this.query(this.state.textSearch);
+    })
   }
   onStudentLoggedOut() {
-    // TODO: Socket event handler if user logged out - run query
+    Socket.users.on('user_logout', user => {
+      this.query(this.state.textSearch);
+    })
   }
   onstartChat(withUser) {
-    // TODO: event to invoke start-chat action via Socket, redirect to /network page
+    this.props.startChat(withUser);
+    Socket.users.emit('start-chat', withUser, this.props.currentUser);
+    console.log('start-chat with user', withUser);
+    this.props.history.push('/network');
   }
+
   query(textSearch) {
     Socket.connect(users => {
       users.emit('search', textSearch, result => {
+        const {currentUser} = this.props;
+        if(currentUser){
+          result = result.filter(e => e.email !== currentUser.email);
+        }
         this.setState({ studentsList: result });
       });
     });
@@ -42,32 +54,51 @@ class Search extends React.Component {
   render() {
     return (
       <Container className="mt-5">
-        <Row>
-          <Col lg={8} md={10} sm={12}>
-            <Form onSubmit={e => this.handleSubmit(e)}>
-              <Form.Group>
-                <InputGroup size="lg" className="mb-3">
-                  <Form.Control placeholder='Search' onChange={e => this.setState({ textSearch: e.target.value })} value={this.state.textSearch} aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
-                  <InputGroup.Append>
-                    <Button variant='primary' id="r5"> Search </Button>
-                  </InputGroup.Append>
-                </InputGroup>
-              </Form.Group>
-            </Form>
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={6} sm={12}>
+      <Row>
+        <Col lg={8} md={10} sm={12}>
+          <Form onSubmit={e => this.handleSubmit(e)}>
+            <Form.Group>
+              <InputGroup size="lg" className="mb-3">
+                <Form.Control onChange={e => this.setState({ textSearch: e.target.value })} value={this.state.textSearch} aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
+                <InputGroup.Append>
+                  <Button type='submit' id = "r5" variant='outline-primary'>Search</Button>
+                </InputGroup.Append>
+              </InputGroup>
+            </Form.Group>
+          </Form>
+        </Col>
+      </Row>
+      <Row>
+        <Tab.Container id="search-results" defaultActiveKey="#user0">
+          <Col>
             <ListGroup>
-              {this.state.studentsList.length > 0 ? this.state.studentsList.map(e => <ListGroup.Item key={e.id}>{e.firstName} {e.lastName} {e.loggedIn && <Badge variant="primary">Online</Badge>}</ListGroup.Item>) : ''}
-            </ListGroup>
+              {this.state.studentsList.map((user, index) => (
+                <ListGroup.Item
+                  eventKey={`#user${index}`}
+                  as="button"
+                >
+                  <span>{user.firstName} {user.lastName}</span>
+                  {user.loggedIn ? <Badge className="ml-2" variant="success">Online</Badge> : null}
+                </ListGroup.Item>
+              ))}
+            </ListGroup>`
           </Col>
-          <Col lg={6} sm={12}>
-            <p>To start chat please click start chat</p>
-            <LinkContainer to='/network'><Button variant='primary'>Start Chat</Button></LinkContainer>
+          <Col>
+            <Tab.Content>
+              {this.state.studentsList.map((user, index) => (
+                <Tab.Pane eventKey={`#user${index}`}>
+                  <div>Name: {user.firstName} {user.lastName}</div>
+                  <div>Email: {user.email}</div>
+                  <div>Learning Targets: {user.learningTargets.join(', ')}</div>
+                  <div>Location: {user.location}</div>
+                  <Button className="mt-3" onClick={(e) => { e.preventDefault(); this.onstartChat(user) }}>Start Chat</Button>
+                </Tab.Pane>
+              ))}
+            </Tab.Content>
           </Col>
-        </Row>
-      </Container>
+        </Tab.Container>
+      </Row>
+    </Container>
     )
   }
 }

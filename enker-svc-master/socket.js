@@ -20,7 +20,17 @@ function connect(server) {
 
 function usersNamespace(io) {
   const users = io.of('/users');
+
+
+
   users.on('connection', socket => {
+
+    socket.on('start-chat', (toUser, fromUser) => {
+      if (toUser) {
+        users.in(toUser.email).emit('start-chat', fromUser);
+      }
+    });
+
 
     socket.on('login', user => {
       socket.join(user.email);

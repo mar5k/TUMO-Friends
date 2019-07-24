@@ -29,43 +29,28 @@ export const createUser = (email, password, firstName, lastName, learningTargets
   }
 }
 
-export const loginUser = (email,password) => {
+
+export const loginUser = (email, password) => {
   return dispatch => {
-    /**
-     * 1. Call Login API
-     * 2. Set Session Storage
-     * 3. Connect to Socket and emit login
-     * 4. Dispatch action LOGIN_USER
-     * 5. Listen on Socket start-chat to dispatch start-chat
-     */
     axios.get(`${apiHost}/students/${email}`, { auth: { username: email, password: password } })
       .then(response => {
-        console.log(response);
         sessionStorage.setItem('email', email);
         sessionStorage.setItem('password', password);
-        Socket.connect(user =>{
-          user.emit('login', {
-            email,
-            password
-          })
-          
-          return dispatch({
-          type: "LOGIN_USER",
-          payload: response.data
+        Socket.connect(user => {
+          user.emit('login', { email, password });
+          user.on('start-chat', fromUser => {
+            console.log('start-chat', fromUser);
+            startChat(fromUser)(dispatch);
+            dispatch(imReceiver());
+          });
+          return dispatch({ type: 'LOGIN_USER', payload: response.data })
         });
-        })
-        
       })
-      .catch(err =>{
-        console.log(err);
-        return dispatch({
-          type: "LOGIN_USER_ERROR",
-          payload: getErrorMessage(err)
-        })
-      })
-
+      .catch(err => {
+        return dispatch({ type: 'LOGIN_USER_ERROR', payload: getErrorMessage(err) })
+      });
   }
-};
+}
 
 export const updateUser = () => {
   return dispatch => {
@@ -94,12 +79,25 @@ export const logoutUser = (user) => {
   }
 }
 
+export const imReceiver = () => ({
+  type: 'IM_THE_RECEIVER',
+})
+
 export const startChat = (withUser) => {
-  // TODO: action creator to start chat
+  return dispatch => {
+    dispatch({
+      type: 'START_CHAT',
+      withUser,
+    });
+  };
 }
 
 export const stopChat = () => {
-  // TODO: action creator to stop chat
+  return dispatch => {
+    dispatch({
+      type: 'STOP_CHAT'
+    });
+  }
 }
 
 // Use helper function to parse error message from API

@@ -10,7 +10,7 @@ import './../../../src/pages/search/search.css'
 import './navigationbar.css';
 
 
-export default ({user, location, logoutUser}) => (
+export default ({user, location, logoutUser, withUser}) => (
   <div className="global-nav">
     <Navbar bg="dark" variant="dark" expand="lg" fixed="top">
       <LinkContainer to="/">
@@ -49,6 +49,7 @@ export default ({user, location, logoutUser}) => (
             <LinkContainer to="/">
               <Button id = "r5" onClick={() => logoutUser(sessionStorage.getItem('email'), sessionStorage.getItem('email'))}>Log Out</Button>
             </LinkContainer>
+            { withUser ? <LinkContainer to="/network"><Button className="ml-2" variant="outline-success">CHAT!</Button></LinkContainer> : null}
           </span>
         </span>
       ) : null
