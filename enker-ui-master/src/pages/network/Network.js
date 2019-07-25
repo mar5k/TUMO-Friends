@@ -1,27 +1,51 @@
 import React, { Component } from 'react';
 import { Container, Col, Row } from 'react-bootstrap';
-
+import { Widget, addResponseMessage, addLinkSnippet, addUserMessage } from 'react-chat-widget';
+import 'react-chat-widget/lib/styles.css';
+// import logo from './logo.svg';
 import './network.css';
-// TODO: use --> import Socket from '../../socket';
+import Socket from '../../socket';
 
 /**
  * Main React Component for the networking page (WYSIWIG, Chat, Video, Canvas)
  */
 class NetworkPage extends Component {
-  // constructor(props) {
-    // TODO: set state and handlers for chat message and WYSIWIG
-  // }
+  constructor(props) {
+    super(props);
+    this.state = {}
+  }
+  handleNewUserMessage = (newMessage) => {
+    console.log(`New message incoming! ${newMessage}`);
+    Socket.connect(user => {
+      user.emit('message', newMessage, this.props.withUser);
+    });
+  }
   componentDidMount() {
-    // TODO: connect to socket and emit/recieve messages for chat and editor
+    addResponseMessage("Connected Successfully!");
+    Socket.connect(user => {
+      user.on('new message', msg => {
+        addResponseMessage(msg);
+      });
+    });
   }
   componentWillUnmount() {
+    Socket.connect(users => {
+      users.removeListener('message');
+    })
     // TODO: cleanup listeners for chat/editor sockets
   }
   render() {
     return (
       <Container fluid={true} className="p-0">
         { 
-          // TODO: Add chat widget 
+          <div className="App">
+          <Widget
+            handleNewUserMessage={this.handleNewUserMessage}
+            // profileAvatar={logo}
+            title="My new awesome title"
+            subtitle="And my cool subtitle"
+          />
+        </div>
         } 
         <Row noGutters={true}>
           <Col>

@@ -3,25 +3,11 @@ var db = require('./db');
 
 function connect(server) {
   const io = socketIO(server);
-
-  // TODO: Create namespaces
   usersNamespace(io);
 }
 
-// TODO: add listener for starting chat
-
-// TODO: add listener to chat message
-
-// TODO: add listener for editor message WYSIWIG
-
-// TODO: add listener for drawing
-
-// TODO: add listener for logging in, update flag loggedIn in Database, join room
-
 function usersNamespace(io) {
   const users = io.of('/users');
-
-
 
   users.on('connection', socket => {
 
@@ -31,6 +17,11 @@ function usersNamespace(io) {
       }
     });
 
+    socket.on('message', (msg, toUser) => {
+      if(toUser){
+        users.in(toUser.email).emit('new message', msg);
+      }
+    });
 
     socket.on('login', user => {
       socket.join(user.email);
@@ -82,9 +73,6 @@ function usersNamespace(io) {
         }
       });
     });
-    // TODO: add listener for logout message, update db, emit
-
-
   });
 }
 
