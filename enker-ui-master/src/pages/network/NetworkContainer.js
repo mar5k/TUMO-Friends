@@ -4,7 +4,8 @@ import Network from './Network';
 
 const mapStateToProps = state => ({
   user: state.user.data,
-  withUser: state.network.withUser
+  withUser: state.network.withUser,
+  receiver: state.network.receiver
 });
 
 const mapDispatchToProps = dispatch => ({})

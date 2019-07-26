@@ -53,6 +53,7 @@ class Search extends React.Component {
   }
   render() {
     return (
+      <div className="d">
       <Container className="mt-5">
       <Row>
         <Col lg={8} md={10} sm={12}>
@@ -99,6 +100,7 @@ class Search extends React.Component {
         </Tab.Container>
       </Row>
     </Container>
+    </div>
     )
   }
 }

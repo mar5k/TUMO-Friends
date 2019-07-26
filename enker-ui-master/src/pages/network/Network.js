@@ -1,21 +1,17 @@
 import React, { Component } from 'react';
-import { Container, Col, Row } from 'react-bootstrap';
-import { Widget, addResponseMessage, addLinkSnippet, addUserMessage } from 'react-chat-widget';
+import { Container, Col, Row, Tab, Tabs} from 'react-bootstrap';
+import { Widget, addResponseMessage } from 'react-chat-widget';
 import 'react-chat-widget/lib/styles.css';
-// import logo from './logo.svg';
 import './network.css';
 import Socket from '../../socket';
+import VideoChat from './VideoChat'
 
-/**
- * Main React Component for the networking page (WYSIWIG, Chat, Video, Canvas)
- */
 class NetworkPage extends Component {
   constructor(props) {
     super(props);
     this.state = {}
   }
   handleNewUserMessage = (newMessage) => {
-    console.log(`New message incoming! ${newMessage}`);
     Socket.connect(user => {
       user.emit('message', newMessage, this.props.withUser);
     });
@@ -30,7 +26,7 @@ class NetworkPage extends Component {
   }
   componentWillUnmount() {
     Socket.connect(users => {
-      users.removeListener('message');
+      users.removeListener('new message');
     })
     // TODO: cleanup listeners for chat/editor sockets
   }
@@ -41,7 +37,6 @@ class NetworkPage extends Component {
           <div className="App">
           <Widget
             handleNewUserMessage={this.handleNewUserMessage}
-            // profileAvatar={logo}
             title="My new awesome title"
             subtitle="And my cool subtitle"
           />
@@ -49,16 +44,23 @@ class NetworkPage extends Component {
         } 
         <Row noGutters={true}>
           <Col>
-            <span>TODO: add tabs for Canvas and WYSIWIG</span>
-            { 
-              // TODO: add tabs for Canvas and WYSIWIG }
-            }
+            <Tabs defaultActiveKey='document'>
+              <Tab eventKey="document" title="Document">
+                <h1>Doc</h1>
+              </Tab>
+              <Tab eventKey="canvas" title="Canvas">
+                <Drawing withUser={this.props.withUser} currentUser={this.props.currentUser} />
+              </Tab>
+            </Tabs>
           </Col>
           <Col>
-            <div>TODO: add VideoChat element
-              {
-                // TODO: add video chat element
-              }
+            <div>
+              <VideoChat
+                user={this.props.user}
+                caller={this.props.receiver ? this.props.withUser : this.props.user}
+                receiver={this.props.receiver ? this.props.user : this.props.withUser}
+              >
+              </VideoChat>
             </div>
           </Col>
         </Row>
